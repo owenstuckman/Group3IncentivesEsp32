@@ -1,3 +1,10 @@
+/*
+
+This code is just a test to ensure connection has been made and it works.
+
+Makes the on board LED blink.
+
+*/
 
 #include <Arduino.h>
 
