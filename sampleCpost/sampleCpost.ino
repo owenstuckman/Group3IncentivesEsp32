@@ -16,22 +16,37 @@ void setup() {
     Serial.begin(115200);
     pinMode(LED, OUTPUT);  // Set LED pin as output
 
-    // Connect to Wi-Fi
-    WiFi.mode(WIFI_STA);  // Set Wi-Fi to Station mode
-    WiFi.begin(ssid, password);
-    while (WiFi.status() != WL_CONNECTED) {
+
+    int attempts = 0;
+    const int maxAttempts = 5;  // Adjust as needed
+
+    while (WiFi.status() != WL_CONNECTED && attempts < maxAttempts) {
+        Serial.print(Wifi.Status());
         delay(500);
         Serial.print(".");
+        attempts++;
+        // Connect to Wi-Fi
+        WiFi.mode(WIFI_STA);  // Set Wi-Fi to Station mode
+        WiFi.begin(ssid, password);
     }
-    Serial.println("\nConnected to Wi-Fi");
 
-    // LED indication
-    digitalWrite(LED, HIGH);
-    Serial.println("LED is on");
-    delay(1000);
-    digitalWrite(LED, LOW);
-    Serial.println("LED is off");
-    delay(1000);
+    if (WiFi.status() == WL_CONNECTED) {
+        Serial.println("\nConnected to Wi-Fi");
+    } else {
+        Serial.println("\nFailed to connect to Wi-Fi");
+        
+        // LED indication
+        digitalWrite(LED, HIGH);
+        Serial.println("LED is on");
+        delay(1000);
+        digitalWrite(LED, LOW);
+        Serial.println("LED is off");
+        delay(1000);
+
+        // Optionally, restart ESP if connection fails
+        ESP.restart();
+    }
+
 
     // Make HTTP POST request
     HTTPClient http;
