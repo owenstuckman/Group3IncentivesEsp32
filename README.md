@@ -1,5 +1,5 @@
 # Group3IncentivesEsp32
 
-Micropython which uploads data to supabase by connecting to the VT wifi.
+C++ with ESP32 that connects to Wi-Fi and sends posts to Supabase.
 
 Also responsible for displaying to an 16x2 LCD screen information upon scan. 
