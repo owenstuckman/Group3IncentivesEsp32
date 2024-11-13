@@ -36,13 +36,18 @@ void setup() {
     HTTPClient http;
     http.begin(serverUrl);
 
+    // Add headers
     http.addHeader("Content-Type", "application/json");
-    http.addHeader("Authorization", String("Bearer ") + apiKey);
+    http.addHeader("apikey", apiKey);  // Supabase expects the API key in this header
 
+    // Create JSON payload
     String payload = "{\"sample\":\"John Doe\"}";
+
+    // Send HTTP POST request
     int httpResponseCode = http.POST(payload);
 
-     if (httpResponseCode > 0) {
+    // Check HTTP response
+    if (httpResponseCode > 0) {
         String response = http.getString();
         Serial.println("HTTP Response code: " + String(httpResponseCode));
         Serial.println("Response: " + response);
@@ -58,4 +63,5 @@ void loop() {
     delay(3000);
     digitalWrite(LED, LOW);
     delay(3000);
+    Serial.println("Things are going");
 }
