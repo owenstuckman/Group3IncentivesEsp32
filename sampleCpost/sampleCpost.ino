@@ -4,8 +4,10 @@
 #define LED 2  // Define LED pin
 
 // ssid is wifi network
-const char* ssid = "VT Open Wifi";  // Open Wi-Fi network, no password required
-const char* password = "";  // Empty password for open network
+const char* ssid = "eduroam";  // Name of the network
+const char* username = "ostuckman@vt.edu";
+const char* password = "iqsm-lspy-zgof-mpeu";
+
 // api endpoint
 const char* serverUrl = "https://zmqjskgfggxxmpfhygni.supabase.co/rest/v1/ScannedItems";
 // api key 
