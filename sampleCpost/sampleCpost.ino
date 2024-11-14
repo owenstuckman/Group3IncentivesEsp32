@@ -21,6 +21,8 @@ const char* serverUrl = "https://zmqjskgfggxxmpfhygni.supabase.co/rest/v1/Scanne
 // API key (Supabase)
 const char* apiKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InptcWpza2dmZ2d4eG1wZmh5Z25pIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzAzODM1NTcsImV4cCI6MjA0NTk1OTU1N30.So0-6hvuRcrW89GkzIOdaQhkA0k22QlFc4ev3zKSgqY";
 
+bool scannedAnItem = false;
+
 // Run before Loop() is run
 void setup() {
 
@@ -52,7 +54,12 @@ void setup() {
         Serial.println("\nFailed to connect to Wi-Fi\n\n\n");
        
     }
+    
+}
 
+void loop() {
+    
+    if(scannedAnItem == true){
 
     // Init http client, and start request to server
     HTTPClient http;
@@ -61,8 +68,7 @@ void setup() {
     // Add headers
     http.addHeader("Content-Type", "application/json");
     http.addHeader("apikey", apiKey);  // Supabase expects the API key in this header
-
-    // Create JSON payload
+      // Create JSON payload
     String payload = "{\"sample\":\"John Doe\"}";
 
     // Send POST request
@@ -77,14 +83,7 @@ void setup() {
         Serial.println("Error on HTTP request: " + String(httpResponseCode));
     }
 
-    http.end();
-}
-
-void loop() {
-    // Flash LED to have physical indication that setup is complete (for testing)
-    digitalWrite(LED, HIGH);
-    delay(3000);
-    digitalWrite(LED, LOW);
-    delay(3000);
-    Serial.println("Testing");
+    http.end()
+    
+    }
 }
