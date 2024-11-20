@@ -47,3 +47,6 @@ flowchart TD
     
 
 ```
+# ERD
+
+![image](https://github.com/user-attachments/assets/94af8931-4a54-44d4-bbbf-bbde375e9825)
