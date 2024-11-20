@@ -83,7 +83,7 @@ void loop() {
         Serial.println("Error on HTTP request: " + String(httpResponseCode));
     }
 
-    http.end()
+    http.end();
     
     }
 }
