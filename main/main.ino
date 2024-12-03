@@ -20,8 +20,10 @@ LiquidCrystal_I2C lcd(0x27, 16, 2);
 
 // Name of the network
 const char* ssid = "VT Open WiFi";  
-// API endpoint (Supabase Table)
-const char* serverUrl = "https://zmqjskgfggxxmpfhygni.supabase.co/rest/v1/ScannedItems";
+// API endpoint (Supabase Table) for scanned items
+const char* serverUrlItems = "https://zmqjskgfggxxmpfhygni.supabase.co/rest/v1/ScannedItems";
+// API endpoint (supabase table) for kickbacks
+const char* serverUrlKickbacks = "https://zmqjskgfggxxmpfhygni.supabase.co/rest/v1/ItemsKickback?select=pointsPer&barcodeID=eq.";
 // API key (Supabase)
 const char* apiKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InptcWpza2dmZ2d4eG1wZmh5Z25pIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzAzODM1NTcsImV4cCI6MjA0NTk1OTU1N30.So0-6hvuRcrW89GkzIOdaQhkA0k22QlFc4ev3zKSgqY";
 
@@ -65,8 +67,10 @@ void setup() {
        
     }
 
-// initialize LCD
+// init http client
+    HTTPClient http;
 
+// initialize LCD
     lcd.init();
     lcd.backlight();
     lcd.clear();
@@ -89,6 +93,7 @@ void setup() {
 void loop() {
 
 // Scan with camera
+
     // thing
 
     /*
@@ -106,6 +111,9 @@ void loop() {
     // ensure valid hokieP
     if ((std::all_of(str.begin(), str.end(), ::isdigit)) && str.length() == 9) { 
         hokiePScanned = true;
+        // print lcd message
+        lcd.print("Valid HokieP Scanned!");
+        Serial.print("Valid HokieP");
     }
 
 
@@ -127,12 +135,15 @@ void loop() {
             */
 
             if (scannedAnItem = true){
+                
+                // print lcd message
+                lcd.print("Barcode Scanned: " + barcode);
+                Serial.print("Barcode Scanned: " + barcode);
 
             // Post Scanned Item to Supabase
 
-                // Init http client, and start request to server
-                HTTPClient http;
-                http.begin(serverUrl);
+                // Start request to server
+                http.begin(serverUrlItems);
 
                 // Add headers
                 http.addHeader("Content-Type", "application/json");
@@ -162,7 +173,39 @@ void loop() {
                 i = 0;
 
                 // take a second in between
-                delay(500);
+                delay(1000);
+            
+            // get 'points' info from supabase to display
+
+            /*
+            
+            In theory works - but is acting weird in postman
+
+            */
+
+                // Start request to server
+                http.begin(serverUrlKickbacks + barcode);
+
+                // Add headers
+                http.addHeader("apikey", apiKey);  // Supabase expects the API key in this header
+                
+                // Send POST request
+                int httpResponseCode = http.POST(payload);
+
+                // Check HTTP response, print errors to serial monitor
+                if (httpResponseCode > 0) {
+                    String response = http.getString();
+                    Serial.println("HTTP Response code: " + String(httpResponseCode));
+                    Serial.println("Response: " + response);
+                } else {
+                    Serial.println("Error on HTTP request: " + String(httpResponseCode));
+                }
+
+                // end http request
+                http.end();
+
+                // LCD print
+                lcd.print(response);
 
             }
 
@@ -172,6 +215,10 @@ void loop() {
 
         // reset hokieP scanning
         hokiePScanned = false;
+        //clear message on lcd, restarts cycle
+        lcd.clear();
+        // reset hokieP (failsafe)
+        hokieP = ''
 
     }
 }
