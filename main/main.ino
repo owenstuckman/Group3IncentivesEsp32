@@ -33,6 +33,7 @@ bool scannedAnItem = false;
 //vars
 String barcode = "";
 String hokieP = "";
+String response = "";
 
 void setup() {
 
@@ -92,9 +93,11 @@ void setup() {
 
 void loop() {
 
-// Scan with camera
+    // delay rounds
 
-    // thing
+    delay(10000);
+
+// Scan with camera
 
     /*
     
@@ -106,18 +109,17 @@ void loop() {
     */
     
     // put output of scanner to this
-    std::string hokieP = '';
+        // using own hokieP as sample
+    std::string hokieP = '906630896';
 
     // ensure valid hokieP
-    if ((std::all_of(str.begin(), str.end(), ::isdigit)) && str.length() == 9) { 
+    if ((std::all_of(hokieP.begin(), hokieP.end(), ::isdigit)) && hokieP.length() == 9) { 
         hokiePScanned = true;
         // print lcd message
         lcd.print("Valid HokieP Scanned!");
         Serial.print("Valid HokieP");
     }
 
-
-    
     if (hokiePScanned == true){
 
         for(int i = 0; i < 5000; i++){
@@ -133,6 +135,20 @@ void loop() {
             scannedAnItem = true;
             
             */
+
+           // instead of camera
+            int counter = 0;
+
+            if (i = 1000){
+                counter++;
+                barcode = 307750;
+                scannedAnItem = true;
+            }
+
+            if (counter = 1){
+                break;
+            }
+            //
 
             if (scannedAnItem = true){
                 
@@ -156,7 +172,7 @@ void loop() {
 
                 // Check HTTP response, print errors to serial monitor
                 if (httpResponseCode > 0) {
-                    String response = http.getString();
+                    response = http.getString();
                     Serial.println("HTTP Response code: " + String(httpResponseCode));
                     Serial.println("Response: " + response);
                 } else {
@@ -175,6 +191,9 @@ void loop() {
                 // take a second in between
                 delay(1000);
             
+            
+        // remove if there is not enough space 
+
             // get 'points' info from supabase to display
 
             /*
@@ -190,11 +209,11 @@ void loop() {
                 http.addHeader("apikey", apiKey);  // Supabase expects the API key in this header
                 
                 // Send POST request
-                int httpResponseCode = http.POST(payload);
+                httpResponseCode = http.POST(payload);
 
                 // Check HTTP response, print errors to serial monitor
                 if (httpResponseCode > 0) {
-                    String response = http.getString();
+                    response = http.getString();
                     Serial.println("HTTP Response code: " + String(httpResponseCode));
                     Serial.println("Response: " + response);
                 } else {
@@ -218,7 +237,7 @@ void loop() {
         //clear message on lcd, restarts cycle
         lcd.clear();
         // reset hokieP (failsafe)
-        hokieP = ''
+        hokieP = '906630896';
 
     }
 }
