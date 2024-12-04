@@ -18,6 +18,9 @@ Written by Owen Stuckman.
 // Define LCD I2C device -> through GPIO
 LiquidCrystal_I2C lcd(0x27, 16, 2);
 
+// Define http client
+HTTPClient http;
+
 // Name of the network
 const char* ssid = "VT Open WiFi";  
 // API endpoint (Supabase Table) for scanned items
@@ -68,9 +71,6 @@ void setup() {
        
     }
 
-// init http client
-    HTTPClient http;
-
 // initialize LCD
     lcd.init();
     lcd.backlight();
@@ -110,10 +110,10 @@ void loop() {
     
     // put output of scanner to this
         // using own hokieP as sample
-    std::string hokieP = '906630896';
+    String hokieP = "906630896";
 
-    // ensure valid hokieP
-    if ((std::all_of(hokieP.begin(), hokieP.end(), ::isdigit)) && hokieP.length() == 9) { 
+    // ensure valid hokieP -> not great validation right now, would interact with actual list 
+    if (hokieP.length() == 9) { 
         hokiePScanned = true;
         // print lcd message
         lcd.print("Valid HokieP Scanned!");
