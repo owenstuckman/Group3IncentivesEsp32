@@ -112,23 +112,27 @@ void loop() {
     */
     
     // put output of scanner to this
-        // using own hokieP as sample
+        // using sample hokieP
     String hokieP = "906630896";
 
-    // ensure valid hokieP -> not great validation right now, would interact with actual list 
+    // ensure valid hokieP
     if (hokieP.length() == 9) { 
+        // allow to insert item
         hokiePScanned = true;
+
         // print lcd message
         lcd.print("Valid HokieP");
         lcd.setCursor(0, 1);
         lcd.print("Scanned!");
-        Serial.println("Valid HokieP");
         delay(1000);
         lcd.clear();
+        Serial.println("Valid HokieP");
     }
 
+    // ensure a valid hokieP is scanned before attributing items
     if (hokiePScanned == true){
 
+        // for loop controls cycles for 5 seconds
         for(int i = 0; i < 5000; i++){
         
         // Scan for barcode
@@ -143,25 +147,22 @@ void loop() {
             
             */
             
-
+            // sample bar code and time frame, since code is not working
             if (i = 1000){
                 barcode = "307750";
                 scannedAnItem = true;
             }
 
-            //
-
+            // ensure item was scanned, allow for seperate cam logic
             if (scannedAnItem = true){
-
-              delay(4000);
                 
                 // print lcd message
                 lcd.print("Barcode Scanned: ");
                 lcd.setCursor(0, 1);
                 lcd.print(barcode);
-                Serial.print("Barcode Scanned: " + barcode);
                 delay(1000);
                 lcd.clear();
+                Serial.print("Barcode Scanned: " + barcode);
 
             // Post Scanned Item to Supabase
 
@@ -212,7 +213,9 @@ void loop() {
                 // end http request
                 http.end();
 
-                // Extract json info
+                // parse json
+
+                // init var
                 StaticJsonDocument<1000> extractJson;
                 // Parse the JSON string 
                 DeserializationError error = deserializeJson(extractJson, response); 
@@ -223,10 +226,9 @@ void loop() {
                 Serial.println(itemName);
 
                 // LCD print
-                // i hardcoded
                 lcd.print("You Scanned: ");
                 lcd.setCursor(0, 1);
-                lcd.print("Chewy Granola Bar");
+                lcd.print(itemName);
                 delay(1000);
                 lcd.clear();
 
@@ -253,6 +255,8 @@ void loop() {
                 // end http request
                 http.end();
 
+                // parse json
+
                 // Extract json info
                 StaticJsonDocument<1000> extractJson2;
                 // Parse the JSON string 
@@ -266,7 +270,7 @@ void loop() {
                 // LCD print
                 lcd.print("Earned points: ");
                 lcd.setCursor(0,1);
-                lcd.print("10");
+                lcd.print(pointsPer);
                 delay(1000);
                 lcd.clear();
 
@@ -278,11 +282,11 @@ void loop() {
 
             }
 
-            // 1 ms cycle 
+            // 1 ms cycle (per i)
             delay(1);
         }
 
-        // reset hokieP scanning
+        // reset hokieP scanning (full cycle)
         hokiePScanned = false;
         // reset hokieP (failsafe)
         hokieP = '906630896';
