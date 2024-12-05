@@ -29,7 +29,7 @@ const char* serverUrlItems = "https://zmqjskgfggxxmpfhygni.supabase.co/rest/v1/S
 // API endpoint (supabase table) for kickbacks points
 const char* serverUrlKickbacks = "https://zmqjskgfggxxmpfhygni.supabase.co/rest/v1/ItemsKickback?select=pointsPer&barcodeID=eq.";
 // API endpoint for kickbacks itemname
-const char* serverUrlKickbacksName = "https://zmqjskgfggxxmpfhygni.supabase.co/rest/v1/ItemsKickbacks?select=item_name&barcodeID=eq."
+const char* serverUrlKickbacksName = "https://zmqjskgfggxxmpfhygni.supabase.co/rest/v1/ItemsKickbacks?select=item_name&barcodeID=eq.";
 // API key (Supabase)
 const char* apiKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InptcWpza2dmZ2d4eG1wZmh5Z25pIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzAzODM1NTcsImV4cCI6MjA0NTk1OTU1N30.So0-6hvuRcrW89GkzIOdaQhkA0k22QlFc4ev3zKSgqY";
 
@@ -212,7 +212,7 @@ void loop() {
                 // LCD print
                 lcd.print("You Scanned: " + response);
                 delay(1000);
-                lcd.clear()
+                lcd.clear();
 
             // get 'points' info from supabase to display
 
@@ -240,7 +240,7 @@ void loop() {
                 // LCD print
                 lcd.print("Earned " + response + " points");
                 delay(1000);
-                lcd.clear()
+                lcd.clear();
 
                 // restart scan
                 scannedAnItem = false;
