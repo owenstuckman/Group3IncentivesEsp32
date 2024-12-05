@@ -2,19 +2,11 @@
 
 C++ with ESP32 that connects to Wi-Fi and sends posts to Supabase.
 
+Scans QR codes with an attached camera.
+
 Also responsible for displaying to an 16x2 LCD screen information upon scan. 
 
 ---
-
-Finished trigger on insert scanned item
-data design should be done, just need to display, and write posts and gets
-
-To-DO
-- [ ] post scanned items updated
-- [ ] get total account points
-- [ ] displays and cycles using below diagramming
-- [ ] structure w/o lcd+Scanning/camera
-- [ ] hook up for LCD and scanning
 
 
 
