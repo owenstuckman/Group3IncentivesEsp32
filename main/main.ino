@@ -24,9 +24,12 @@ HTTPClient http;
 // Name of the network
 const char* ssid = "VT Open WiFi";  
 // API endpoint (Supabase Table) for scanned items
+
 const char* serverUrlItems = "https://zmqjskgfggxxmpfhygni.supabase.co/rest/v1/ScannedItems";
-// API endpoint (supabase table) for kickbacks
+// API endpoint (supabase table) for kickbacks points
 const char* serverUrlKickbacks = "https://zmqjskgfggxxmpfhygni.supabase.co/rest/v1/ItemsKickback?select=pointsPer&barcodeID=eq.";
+// API endpoint for kickbacks itemname
+const char* serverUrlKickbacksName = "https://zmqjskgfggxxmpfhygni.supabase.co/rest/v1/ItemsKickbacks?select=item_name&barcodeID=eq."
 // API key (Supabase)
 const char* apiKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InptcWpza2dmZ2d4eG1wZmh5Z25pIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzAzODM1NTcsImV4cCI6MjA0NTk1OTU1N30.So0-6hvuRcrW89GkzIOdaQhkA0k22QlFc4ev3zKSgqY";
 
@@ -136,8 +139,12 @@ void loop() {
             
             */
 
-           // instead of camera
+           // instead of camera, running it once 
             int counter = 0;
+
+            if (counter = 1){
+                break;
+            }
 
             if (i = 1000){
                 counter++;
@@ -145,9 +152,6 @@ void loop() {
                 scannedAnItem = true;
             }
 
-            if (counter = 1){
-                break;
-            }
             //
 
             if (scannedAnItem = true){
@@ -182,34 +186,16 @@ void loop() {
                 // end http request
                 http.end();
                 
-                // restart scan
-                scannedAnItem = false;
+            // get item name info from supabase to display
 
-                // reset scanning cycle
-                i = 0;
-
-                // take a second in between
-                delay(1000);
-            
-            
-        // remove if there is not enough space 
-
-            // get 'points' info from supabase to display
-
-            /*
-            
-            In theory works - but is acting weird in postman
-
-            */
-
-                // Start request to server
-                http.begin(serverUrlKickbacks + barcode);
+              // Start request to server
+                http.begin(serverUrlKickbacksName + barcode);
 
                 // Add headers
                 http.addHeader("apikey", apiKey);  // Supabase expects the API key in this header
                 
                 // Send POST request
-                httpResponseCode = http.POST(payload);
+                httpResponseCode = http.GET();
 
                 // Check HTTP response, print errors to serial monitor
                 if (httpResponseCode > 0) {
@@ -224,7 +210,43 @@ void loop() {
                 http.end();
 
                 // LCD print
-                lcd.print(response);
+                lcd.print("You Scanned: " + response);
+                delay(1000);
+                lcd.clear()
+
+            // get 'points' info from supabase to display
+
+                // Start request to server
+                http.begin(serverUrlKickbacks + barcode);
+
+                // Add headers
+                http.addHeader("apikey", apiKey);  // Supabase expects the API key in this header
+                
+                // Send POST request
+                httpResponseCode = http.GET();
+
+                // Check HTTP response, print errors to serial monitor
+                if (httpResponseCode > 0) {
+                    response = http.getString();
+                    Serial.println("HTTP Response code: " + String(httpResponseCode));
+                    Serial.println("Response: " + response);
+                } else {
+                    Serial.println("Error on HTTP request: " + String(httpResponseCode));
+                }
+
+                // end http request
+                http.end();
+
+                // LCD print
+                lcd.print("Earned " + response + " points");
+                delay(1000);
+                lcd.clear()
+
+                // restart scan
+                scannedAnItem = false;
+
+                // reset scanning cycle
+                i = 0;
 
             }
 
