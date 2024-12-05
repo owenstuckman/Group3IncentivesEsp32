@@ -10,7 +10,8 @@ Written by Owen Stuckman.
 
 #include <WiFi.h> // Wifi library
 #include <HTTPClient.h> // Http client
-#include <LiquidCrystal_I2C.h>
+#include <LiquidCrystal_I2C.h> // LCD
+#include <ArduinoJson.h> // Json 
 
 // Define LED pin (on board)
 #define LED 2  
@@ -97,7 +98,6 @@ void setup() {
 void loop() {
 
     // delay rounds
-
     delay(10000);
 
 // Scan with camera
@@ -119,8 +119,12 @@ void loop() {
     if (hokieP.length() == 9) { 
         hokiePScanned = true;
         // print lcd message
-        lcd.print("Valid HokieP Scanned!");
-        Serial.print("Valid HokieP");
+        lcd.print("Valid HokieP");
+        lcd.setCursor(0, 1);
+        lcd.print("Scanned!");
+        Serial.println("Valid HokieP");
+        delay(1000);
+        lcd.clear();
     }
 
     if (hokiePScanned == true){
@@ -138,16 +142,9 @@ void loop() {
             scannedAnItem = true;
             
             */
-
-           // instead of camera, running it once 
-            int counter = 0;
-
-            if (counter = 1){
-                break;
-            }
+            
 
             if (i = 1000){
-                counter++;
                 barcode = 307750;
                 scannedAnItem = true;
             }
@@ -209,8 +206,12 @@ void loop() {
                 // end http request
                 http.end();
 
+                // Extract json info
+                StaticJsonDocument<200> extractJson = response;
+                const char* itemName = extractJson["itemname"];
+
                 // LCD print
-                lcd.print("You Scanned: " + response);
+                lcd.print("You Scanned: " + itemName);
                 delay(1000);
                 lcd.clear();
 
@@ -237,8 +238,12 @@ void loop() {
                 // end http request
                 http.end();
 
+                // Extract json info
+                StaticJsonDocument<200> extractJson = response;
+                const char* pointsPer = extractJson["pointsPer"];
+
                 // LCD print
-                lcd.print("Earned " + response + " points");
+                lcd.print("Earned " + pointsPer + " points");
                 delay(1000);
                 lcd.clear();
 
@@ -256,8 +261,6 @@ void loop() {
 
         // reset hokieP scanning
         hokiePScanned = false;
-        //clear message on lcd, restarts cycle
-        lcd.clear();
         // reset hokieP (failsafe)
         hokieP = '906630896';
 
