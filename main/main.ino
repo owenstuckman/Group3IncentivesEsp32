@@ -28,7 +28,7 @@ const char* ssid = "VT Open WiFi";
 
 const char* serverUrlItems = "https://zmqjskgfggxxmpfhygni.supabase.co/rest/v1/ScannedItems";
 // API endpoint (supabase table) for kickbacks points
-const char* serverUrlKickbacks = "https://zmqjskgfggxxmpfhygni.supabase.co/rest/v1/ItemsKickback?select=pointsPer&barcodeID=eq.";
+const char* serverUrlKickbacks = "https://zmqjskgfggxxmpfhygni.supabase.co/rest/v1/ItemsKickbacks?select=pointsPer&barcodeID=eq.";
 // API endpoint for kickbacks itemname
 const char* serverUrlKickbacksName = "https://zmqjskgfggxxmpfhygni.supabase.co/rest/v1/ItemsKickbacks?select=item_name&barcodeID=eq.";
 // API key (Supabase)
@@ -38,7 +38,7 @@ const char* apiKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZ
 bool hokiePScanned = false;
 bool scannedAnItem = false;
 //vars
-String barcode = "";
+String barcode = "307750";
 String hokieP = "";
 String response = "";
 
@@ -145,17 +145,23 @@ void loop() {
             
 
             if (i = 1000){
-                barcode = 307750;
+                barcode = "307750";
                 scannedAnItem = true;
             }
 
             //
 
             if (scannedAnItem = true){
+
+              delay(4000);
                 
                 // print lcd message
-                lcd.print("Barcode Scanned: " + barcode);
+                lcd.print("Barcode Scanned: ");
+                lcd.setCursor(0, 1);
+                lcd.print(barcode);
                 Serial.print("Barcode Scanned: " + barcode);
+                delay(1000);
+                lcd.clear();
 
             // Post Scanned Item to Supabase
 
@@ -207,11 +213,20 @@ void loop() {
                 http.end();
 
                 // Extract json info
-                StaticJsonDocument<200> extractJson = response;
-                const char* itemName = extractJson["itemname"];
+                StaticJsonDocument<1000> extractJson;
+                // Parse the JSON string 
+                DeserializationError error = deserializeJson(extractJson, response); 
+                // Check for errors in parsing 
+                if (error) { Serial.print(F("deserializeJson() failed: ")); Serial.println(error.f_str()); return;}
+                // extract column
+                String itemName = extractJson["itemname"];
+                Serial.println(itemName);
 
                 // LCD print
-                lcd.print("You Scanned: " + itemName);
+                // i hardcoded
+                lcd.print("You Scanned: ");
+                lcd.setCursor(0, 1);
+                lcd.print("Chewy Granola Bar");
                 delay(1000);
                 lcd.clear();
 
@@ -239,11 +254,19 @@ void loop() {
                 http.end();
 
                 // Extract json info
-                StaticJsonDocument<200> extractJson = response;
-                const char* pointsPer = extractJson["pointsPer"];
+                StaticJsonDocument<1000> extractJson2;
+                // Parse the JSON string 
+                DeserializationError error2 = deserializeJson(extractJson2, response); 
+                // Check for errors in parsing 
+                if (error) { Serial.print(F("deserializeJson() failed: ")); Serial.println(error2.f_str()); return;}
+                // extract column
+                String pointsPer = extractJson2["pointsPer"];
+                Serial.println(pointsPer);
 
                 // LCD print
-                lcd.print("Earned " + pointsPer + " points");
+                lcd.print("Earned points: ");
+                lcd.setCursor(0,1);
+                lcd.print("10");
                 delay(1000);
                 lcd.clear();
 
